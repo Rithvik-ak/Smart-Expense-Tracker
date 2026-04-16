@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
@@ -34,3 +35,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+=======
+# Expense-tracker
+Smart Expense Decision System is a full-stack finance app that helps users track expenses and make smarter decisions using economic analysis and a decision matrix. It features dashboards, categorized transactions, and a pre-spend advisor, built with React, Node.js, and MongoDB.
+>>>>>>> c7b0dcb9aba072c27b2360cbd3d1af615a6ec3a0
