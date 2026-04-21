@@ -14,6 +14,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { Wallet, TrendingUp, TrendingDown, Target, Zap, LayoutGrid, Tag, Brain, BarChart3, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { motion } from 'framer-motion';
 
 // Dynamically import 3D scene to avoid SSR issues
 const BudgetScene = dynamic(() => import('@/components/three/BudgetScene'), { ssr: false });
@@ -67,36 +68,53 @@ export default function Dashboard() {
       <Navbar />
       
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Weekly Summary Banner */}
-        <div className="mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
-          <div className="rounded-3xl bg-blue-600 p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl shadow-blue-500/30 ring-4 ring-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-12 opacity-10">
-              <BarChart3 className="h-40 w-40" />
+        <motion.div 
+          initial="hidden" 
+          animate="visible" 
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+          }}
+        >
+          {/* Weekly Summary Banner */}
+          <motion.div 
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+            className="mb-10"
+          >
+            <div className="rounded-3xl bg-blue-600 p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl shadow-blue-500/30 ring-4 ring-white relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-12 opacity-10 transition-transform duration-700 group-hover:scale-110">
+                <BarChart3 className="h-40 w-40" />
+              </div>
+              <div className="relative z-10 text-center md:text-left">
+                <p className="text-blue-100 font-black uppercase tracking-widest text-[10px] mb-2">Weekly Summary</p>
+                <h2 className="text-3xl font-black">You spent {user.currency || '₹'}{weeklyTotal.toLocaleString()} this week</h2>
+                <p className="text-blue-100 text-sm font-bold mt-2 flex items-center gap-2 justify-center md:justify-start">
+                  {weeklyTotal > (user?.budget / 4) ? 'You are pacing high for your budget' : 'Excellent spending control detected'} 
+                  <ArrowUpRight className="h-4 w-4" />
+                </p>
+              </div>
+              <div className="relative z-10 flex gap-4">
+                <Link href="/reports" className="bg-white/20 backdrop-blur-md px-6 py-3 rounded-2xl font-black text-xs hover:bg-white/30 transition-all ring-1 ring-white/20 uppercase tracking-widest">Reports</Link>
+                <button className="bg-white text-blue-600 px-6 py-3 rounded-2xl font-black text-xs shadow-xl transition-all hover:scale-105 active:scale-95 uppercase tracking-widest">Optimized View</button>
+              </div>
             </div>
-            <div className="relative z-10 text-center md:text-left">
-              <p className="text-blue-100 font-black uppercase tracking-widest text-[10px] mb-2">Weekly Summary</p>
-              <h2 className="text-3xl font-black">You spent {user.currency || '₹'}{weeklyTotal.toLocaleString()} this week</h2>
-              <p className="text-blue-100 text-sm font-bold mt-2 flex items-center gap-2 justify-center md:justify-start">
-                {weeklyTotal > (user?.budget / 4) ? 'You are pacing high for your budget' : 'Excellent spending control detected'} 
-                <ArrowUpRight className="h-4 w-4" />
-              </p>
-            </div>
-            <div className="relative z-10 flex gap-4">
-              <Link href="/reports" className="bg-white/20 backdrop-blur-md px-6 py-3 rounded-2xl font-black text-xs hover:bg-white/30 transition-all ring-1 ring-white/20 uppercase tracking-widest">Reports</Link>
-              <button className="bg-white text-blue-600 px-6 py-3 rounded-2xl font-black text-xs shadow-xl transition-all hover:scale-105 active:scale-95 uppercase tracking-widest">Optimized View</button>
-            </div>
-          </div>
-        </div>
+          </motion.div>
 
-        {/* Header Stats */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-          <StatCard title="Total Balance" value={balance} icon={Wallet} color="blue" currency={user.currency} />
-          <StatCard title="Monthly Income" value={totals.income} icon={TrendingUp} color="green" currency={user.currency} />
-          <StatCard title="Monthly Expenses" value={totals.expense} icon={TrendingDown} color="red" currency={user.currency} />
-          <StatCard title="Budget Score" value={Math.max(0, 100 - budgetUsage).toFixed(0) + '%'} icon={Zap} color="yellow" />
-        </div>
+          {/* Header Stats */}
+          <motion.div 
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8"
+          >
+            <StatCard title="Total Balance" value={balance} icon={Wallet} color="blue" currency={user.currency} />
+            <StatCard title="Monthly Income" value={totals.income} icon={TrendingUp} color="green" currency={user.currency} />
+            <StatCard title="Monthly Expenses" value={totals.expense} icon={TrendingDown} color="red" currency={user.currency} />
+            <StatCard title="Budget Score" value={Math.max(0, 100 - budgetUsage).toFixed(0) + '%'} icon={Zap} color="yellow" />
+          </motion.div>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <motion.div 
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+            className="grid grid-cols-1 gap-8 lg:grid-cols-3"
+          >
           {/* 3D Budget Visualization */}
           <div className="lg:col-span-1 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <h3 className="text-lg font-bold text-slate-900 mb-2 flex items-center">
@@ -171,7 +189,7 @@ export default function Dashboard() {
             </div>
 
             {/* Recent Transactions List */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 overflow-hidden">
+            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 overflow-hidden hover:shadow-md transition-shadow">
               <h3 className="text-lg font-bold text-slate-900 mb-4">Transaction History</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
@@ -226,7 +244,8 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </main>
 
       <TransactionForm onSuccess={fetchTransactions} />

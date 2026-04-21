@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { ArrowRight, Zap, Target, BarChart3, Shield, PieChart, Activity, Globe, MousePointer2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { motion } from 'framer-motion';
 
 // Dynamic hero scene
 const HeroScene = dynamic(() => import('@/components/three/HeroScene'), { ssr: false });
@@ -40,19 +41,44 @@ export default function LandingPage() {
           <HeroScene />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 mb-8 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-1000">
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, staggerChildren: 0.2 }}
+          className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center"
+        >
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 mb-8 backdrop-blur-md"
+          >
             <Zap className="h-3 w-3 text-blue-400" />
             <span className="text-[10px] font-black uppercase tracking-widest text-blue-100">AI-Powered Financial Engine</span>
-          </div>
-          <h1 className="mx-auto max-w-4xl text-5xl font-black tracking-tight sm:text-7xl lg:text-8xl leading-[1.1] mb-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="mx-auto max-w-4xl text-5xl font-black tracking-tight sm:text-7xl lg:text-8xl leading-[1.1] mb-8"
+          >
             Your Money. <br />
             <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">Smarter Decisions.</span>
-          </h1>
-          <p className="mx-auto max-w-2xl text-lg text-slate-400 font-medium leading-relaxed mb-10 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 1 }}
+            className="mx-auto max-w-2xl text-lg text-slate-400 font-medium leading-relaxed mb-10"
+          >
             Track every rupee with clarity and control. Get real-time insights into your spending and make smarter financial decisions—without the complexity. Built for modern users who want simplicity with power.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
             <Link href={user ? "/dashboard" : "/signup"} className="group relative rounded-2xl bg-white px-8 py-4 text-sm font-black text-slate-950 shadow-2xl shadow-white/10 transition-all hover:scale-105 active:scale-95 uppercase tracking-widest">
               Start Tracking Now
               <ArrowRight className="inline-block ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -60,8 +86,8 @@ export default function LandingPage() {
             <Link href="#features" className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md px-8 py-4 text-sm font-black text-white transition-all hover:bg-white/10 uppercase tracking-widest">
               View Analytics
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Bento Feature Grid */}
@@ -74,9 +100,18 @@ export default function LandingPage() {
             <p className="text-slate-400 font-medium">Tools designed to give you an unfair advantage in money management.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ staggerChildren: 0.2 }}
+            className="grid grid-cols-1 md:grid-cols-12 gap-6"
+          >
             {/* Main Feature */}
-            <div className="md:col-span-8 rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md relative overflow-hidden group">
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              className="md:col-span-8 rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md relative overflow-hidden group"
+            >
               <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:scale-110 transition-transform duration-700">
                 <BarChart3 className="h-40 w-40" />
               </div>
@@ -87,44 +122,56 @@ export default function LandingPage() {
                 <h3 className="text-2xl font-black mb-4">Advanced Expense Tracking</h3>
                 <p className="max-w-md text-slate-400 leading-relaxed font-medium">Categorize transactions into our unique 2x2 importance/usefulness matrix. Move beyond simple logging into actual economic analysis.</p>
               </div>
-            </div>
+            </motion.div>
 
             {/* AI Insight Feature */}
-            <div className="md:col-span-4 rounded-3xl border border-white/10 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 p-8 backdrop-blur-md group">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="md:col-span-4 rounded-3xl border border-white/10 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 p-8 backdrop-blur-md group"
+            >
               <div className="h-12 w-12 rounded-xl bg-indigo-600 flex items-center justify-center mb-6 ring-4 ring-indigo-500/20 group-hover:scale-110 transition-transform">
                 <Shield className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-2xl font-black mb-4">AI Insights</h3>
               <p className="text-slate-400 leading-relaxed font-medium">Real-time alerts when you're overspending. Smarter budget proposals based on your income.</p>
-            </div>
+            </motion.div>
 
             {/* Budget Control */}
-            <div className="md:col-span-4 rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="md:col-span-4 rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md"
+            >
               <div className="h-10 w-10 rounded-xl bg-emerald-600 flex items-center justify-center mb-6">
                 <Target className="h-5 w-5 text-white" />
               </div>
               <h3 className="text-xl font-black mb-2">Budget Control</h3>
               <p className="text-slate-500 font-medium text-sm">Set hard limits for categories and track your health with interactive 3D indicators.</p>
-            </div>
+            </motion.div>
 
             {/* Global Preferences */}
-            <div className="md:col-span-4 rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="md:col-span-4 rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md"
+            >
               <div className="h-10 w-10 rounded-xl bg-amber-600 flex items-center justify-center mb-6">
                 <Globe className="h-5 w-5 text-white" />
               </div>
               <h3 className="text-xl font-black mb-2">Global Currency</h3>
               <p className="text-slate-500 font-medium text-sm">Seamlessly switch between symbols and manage international expenditures with ease.</p>
-            </div>
+            </motion.div>
 
             {/* Mini Utilities */}
-            <div className="md:col-span-4 rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="md:col-span-4 rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md"
+            >
               <div className="h-10 w-10 rounded-xl bg-slate-700 flex items-center justify-center mb-6">
                 <MousePointer2 className="h-5 w-5 text-white" />
               </div>
               <h3 className="text-xl font-black mb-2">Smart Utilities</h3>
               <p className="text-slate-500 font-medium text-sm">Includes a built-in calculator that directly syncs with your input fields.</p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
