@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { Mail, Lock, Loader2, UserPlus, ShieldCheck } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
@@ -13,7 +14,7 @@ export default function SignupPage() {
   const [age, setAge] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signup } = useAuth();
+  const { signup, googleLogin } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -145,6 +146,35 @@ export default function SignupPage() {
                 'Create Your Account'
               )}
             </button>
+
+            <div className="relative mt-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-sm font-bold uppercase tracking-tight">
+                <span className="bg-white px-2 justify-center flex w-full text-slate-500">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-center w-full">
+              <GoogleLogin
+                onSuccess={(credentialResponse) => {
+                  googleLogin(credentialResponse.credential).then((res) => {
+                     if (res?.error) setError(res.error);
+                  });
+                }}
+                onError={() => {
+                  setError('Google Signup Failed');
+                }}
+                theme="outline"
+                size="large"
+                width="100%"
+                shape="rectangular"
+                text="signup_with"
+              />
+            </div>
           </form>
 
           <p className="mt-8 text-center text-sm font-bold text-slate-400 uppercase tracking-tight">

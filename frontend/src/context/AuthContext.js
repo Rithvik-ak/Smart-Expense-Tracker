@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 
 const AuthContext = createContext();
 
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -44,6 +46,20 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const googleLogin = async (credential) => {
+    const res = await fetch('/api/auth/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      setUser(data.user);
+      router.push('/dashboard');
+    }
+    return data;
+  };
+
   const signup = async (email, password, name, age) => {
     const res = await fetch('/api/auth/signup', {
       method: 'POST',
@@ -68,10 +84,14 @@ export const AuthProvider = ({ children }) => {
     setUser(updatedUser);
   };
 
+  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || 'dummy-id';
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout, updateUser }}>
-      {children}
-    </AuthContext.Provider>
+    <GoogleOAuthProvider clientId={clientId}>
+      <AuthContext.Provider value={{ user, loading, login, googleLogin, signup, logout, updateUser }}>
+        {children}
+      </AuthContext.Provider>
+    </GoogleOAuthProvider>
   );
 };
 
