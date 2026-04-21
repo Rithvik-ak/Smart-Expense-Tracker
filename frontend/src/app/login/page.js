@@ -4,14 +4,14 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { Mail, Lock, Loader2, BarChart3 } from 'lucide-react';
-import { GoogleLogin } from '@react-oauth/google';
+import GoogleLoginButton from '@/components/GoogleLoginButton';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, googleLogin } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -114,20 +114,7 @@ export default function LoginPage() {
             </div>
 
             <div className="mt-6 flex justify-center w-full">
-              <GoogleLogin
-                onSuccess={(credentialResponse) => {
-                  googleLogin(credentialResponse.credential).then((res) => {
-                     if (res?.error) setError(res.error);
-                  });
-                }}
-                onError={() => {
-                  setError('Google Login Failed');
-                }}
-                theme="outline"
-                size="large"
-                width="100%"
-                shape="rectangular"
-              />
+              <GoogleLoginButton />
             </div>
           </form>
 

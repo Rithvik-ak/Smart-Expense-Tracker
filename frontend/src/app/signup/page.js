@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { Mail, Lock, Loader2, UserPlus, ShieldCheck } from 'lucide-react';
-import { GoogleLogin } from '@react-oauth/google';
+import GoogleLoginButton from '@/components/GoogleLoginButton';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
@@ -14,7 +14,7 @@ export default function SignupPage() {
   const [age, setAge] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signup, googleLogin } = useAuth();
+  const { signup } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -159,21 +159,7 @@ export default function SignupPage() {
             </div>
 
             <div className="mt-6 flex justify-center w-full">
-              <GoogleLogin
-                onSuccess={(credentialResponse) => {
-                  googleLogin(credentialResponse.credential).then((res) => {
-                     if (res?.error) setError(res.error);
-                  });
-                }}
-                onError={() => {
-                  setError('Google Signup Failed');
-                }}
-                theme="outline"
-                size="large"
-                width="100%"
-                shape="rectangular"
-                text="signup_with"
-              />
+              <GoogleLoginButton />
             </div>
           </form>
 

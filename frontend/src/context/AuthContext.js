@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation';
 
 const AuthContext = createContext();
 
-import { GoogleOAuthProvider } from '@react-oauth/google';
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -84,14 +82,10 @@ export const AuthProvider = ({ children }) => {
     setUser(updatedUser);
   };
 
-  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || 'dummy-id';
-
   return (
-    <GoogleOAuthProvider clientId={clientId}>
-      <AuthContext.Provider value={{ user, loading, login, googleLogin, signup, logout, updateUser }}>
-        {children}
-      </AuthContext.Provider>
-    </GoogleOAuthProvider>
+    <AuthContext.Provider value={{ user, loading, login, signup, logout, updateUser }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
