@@ -1,16 +1,11 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+// This nextauth route has been disabled since the app uses a custom JWT auth system.
+// Keeping the file to avoid 404s if it's somehow referenced.
+import { NextResponse } from 'next/server';
 
-export const authOptions = {
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "dummy-client-id",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "dummy-client-secret",
-    }),
-  ],
-  secret: process.env.NEXTAUTH_SECRET || "fallback-secret-for-dev",
-};
+export async function GET() {
+  return NextResponse.json({ error: 'OAuth not configured' }, { status: 501 });
+}
 
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };
+export async function POST() {
+  return NextResponse.json({ error: 'OAuth not configured' }, { status: 501 });
+}
