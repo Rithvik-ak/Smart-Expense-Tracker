@@ -1,12 +1,20 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { 
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, 
   Tooltip, ResponsiveContainer, Cell, Legend 
 } from 'recharts';
 
 export function SpendingTrendChart({ data }) {
-  // Aggregate data by date
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return <div className="h-[300px] w-full bg-slate-50 animate-pulse rounded-2xl" />;
+
   const trendData = data.reduce((acc, t) => {
     const date = new Date(t.date).toLocaleDateString();
     acc[date] = (acc[date] || 0) + (t.type === 'expense' ? t.amount : 0);
@@ -20,7 +28,7 @@ export function SpendingTrendChart({ data }) {
 
   return (
     <div className="h-[300px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="99%" height={300} debounce={1}>
         <AreaChart data={chartData}>
           <defs>
             <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
@@ -60,12 +68,20 @@ export function SpendingTrendChart({ data }) {
 }
 
 export function CategoryComparisonChart({ categoryTotals }) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return <div className="h-[300px] w-full bg-slate-50 animate-pulse rounded-2xl" />;
+
   const chartData = Object.entries(categoryTotals).map(([name, value]) => ({ name, value }));
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
   return (
     <div className="h-[300px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="99%" height={300} debounce={1}>
         <BarChart data={chartData} layout="vertical" margin={{ left: 20 }}>
           <XAxis type="number" hide />
           <YAxis 

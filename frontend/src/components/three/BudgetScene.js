@@ -53,7 +53,6 @@ function BudgetRing({ percentage }) {
           position={[0, 0, 0.5]}
           fontSize={0.6}
           color="white"
-          font="/fonts/Geist-Bold.ttf" // Fallback if font doesn't load
           anchorX="center"
           anchorY="middle"
         >

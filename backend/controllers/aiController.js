@@ -14,8 +14,14 @@ exports.getInsights = async (req, res) => {
       return res.status(200).json({ success: true, insights: "You have no expenses recorded yet. Start tracking to get actionable insights!" });
     }
 
-    // Initialize the SDK - it will automatically use process.env.GEMINI_API_KEY
-    const ai = new GoogleGenAI({});
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    if (!GEMINI_API_KEY || GEMINI_API_KEY.includes('your_google_genai_api_key_here')) {
+      return res.status(200).json({ success: true, insights: "AI Insights are currently disabled. Please add a valid GEMINI_API_KEY to your environment variables to enable this feature." });
+    }
+
+    // Initialize the SDK
+    const genAI = new GoogleGenAI(GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const summary = expenses.map(e => `- ${e.title}: ₹${e.amount} (${e.category}) on ${new Date(e.date).toLocaleDateString()}`).join('\n');
     
@@ -25,14 +31,13 @@ ${summary}
 
 Please provide exactly 3 concise, actionable insights and recommendations to help me optimize my spending. Format the response as a simple, easy-to-read list without any extra conversational filler. Focus on identifying patterns, highlighting areas of high spend, or suggesting budget adjustments. Avoid Markdown formatting like asterisks or bold text, just provide clean plain text.`;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-    });
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
 
-    res.status(200).json({ success: true, insights: response.text });
+    res.status(200).json({ success: true, insights: text });
   } catch (err) {
     console.error('Get AI Insights Error:', err);
-    res.status(500).json({ error: 'Server error while generating insights. Check your GEMINI_API_KEY.' });
+    res.status(500).json({ error: 'Server error while generating insights. Ensure your GEMINI_API_KEY is valid.' });
   }
 };
