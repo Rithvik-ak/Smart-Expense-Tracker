@@ -8,10 +8,12 @@ import { ShieldAlert, Info, TrendingDown, Clock, ArrowRight, CheckCircle2, Alert
 import { motion } from 'framer-motion';
 
 export default function PreSpendAdvisor() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('Entertainment');
   const [analysis, setAnalysis] = useState(null);
+
+  if (authLoading || !user) return null;
 
   useEffect(() => {
     if (amount > 0) {
