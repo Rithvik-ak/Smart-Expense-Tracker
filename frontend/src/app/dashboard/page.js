@@ -11,7 +11,7 @@ import CategoryProgress from '@/components/CategoryProgress';
 import { SpendingTrendChart, CategoryComparisonChart } from '@/components/EnhancedCharts';
 import { calculateDashboardInsights } from '@/lib/insightScanner';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { Wallet, TrendingUp, TrendingDown, Target, Zap, LayoutGrid, Tag, Brain, BarChart3, ArrowUpRight, Activity, Sparkles, ChevronRight } from 'lucide-react';
+import { Wallet, TrendingUp, TrendingDown, Target, Zap, LayoutGrid, Tag, Brain, BarChart3, ArrowUpRight, Activity, Sparkles, ChevronRight, Trash2, Edit3 } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
@@ -23,6 +23,7 @@ export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editItem, setEditItem] = useState(null);
 
   useEffect(() => {
     if (user) fetchTransactions();
@@ -37,6 +38,16 @@ export default function Dashboard() {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm('Are you sure you want to delete this record?')) return;
+    try {
+      const res = await fetch(`/api/transactions/${id}`, { method: 'DELETE' });
+      if (res.ok) fetchTransactions();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -222,12 +233,13 @@ export default function Dashboard() {
                       <th className="pb-4 font-black uppercase tracking-widest text-[10px] text-center">Category</th>
                       <th className="pb-4 font-black uppercase tracking-widest text-[10px] text-center">Quadrant</th>
                       <th className="pb-4 font-black uppercase tracking-widest text-[10px] text-right">Value</th>
+                      <th className="pb-4 font-black uppercase tracking-widest text-[10px] text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {transactions.length === 0 ? (
                       <tr>
-                        <td colSpan="4" className="py-12 text-center text-slate-600 font-bold">No activity detected.</td>
+                        <td colSpan="5" className="py-12 text-center text-slate-600 font-bold">No activity detected.</td>
                       </tr>
                     ) : (
                       transactions.slice(0, 6).map((t) => (
@@ -259,6 +271,12 @@ export default function Dashboard() {
                           <td className={`py-5 text-right font-black ${t.type === 'expense' ? 'text-slate-200' : 'text-emerald-400'}`}>
                             {t.type === 'expense' ? '-' : '+'}{user.currency || '₹'}{t.amount.toLocaleString()}
                           </td>
+                          <td className="py-5 text-right">
+                            <div className="flex justify-end gap-2 opacity-0 group-hover/row:opacity-100 transition-opacity">
+                              <button onClick={() => setEditItem(t)} className="p-1.5 rounded-lg bg-blue-600/10 text-blue-400 hover:bg-blue-600 hover:text-white transition-all"><Edit3 className="h-3.5 w-3.5" /></button>
+                              <button onClick={() => handleDelete(t._id)} className="p-1.5 rounded-lg bg-red-600/10 text-red-400 hover:bg-red-600 hover:text-white transition-all"><Trash2 className="h-3.5 w-3.5" /></button>
+                            </div>
+                          </td>
                         </tr>
                       ))
                     )}
@@ -272,6 +290,16 @@ export default function Dashboard() {
       </main>
 
       <TransactionForm onSuccess={fetchTransactions} />
+      {editItem && (
+        <TransactionForm 
+          editData={editItem} 
+          onSuccess={() => {
+            setEditItem(null);
+            fetchTransactions();
+          }}
+          onCancel={() => setEditItem(null)}
+        />
+      )}
       <MiniCalculator />
     </div>
   );

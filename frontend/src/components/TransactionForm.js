@@ -5,15 +5,17 @@ import { Plus, X, AlertCircle, Sparkles } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 const CATEGORY_MAP = {
-  'Essential': ['Rent', 'Utilities', 'Groceries', 'Transport', 'Health Insurance'],
-  'Investment': ['Stocks', 'Mutual Funds', 'Crypto', 'Gold', 'Fixed Deposit'],
-  'Lifestyle': ['Dining', 'Shopping', 'Travel', 'Entertainment', 'Hobbies'],
-  'Health': ['Pharmacy', 'Doctor', 'Wellness', 'Gym'],
-  'Education': ['Tuition', 'Books', 'Software', 'Workshops'],
-  'Other': ['Gifts', 'Donations', 'Misc']
+  'Essential': ['Rent', 'Utilities', 'Groceries', 'Transport', 'Insurance', 'Medical'],
+  'Investment': ['Stocks', 'Mutual Funds', 'Crypto', 'Gold', 'Real Estate', 'Savings'],
+  'Lifestyle': ['Dining', 'Shopping', 'Travel', 'Entertainment', 'Hobbies', 'Gifts'],
+  'Health': ['Pharmacy', 'Doctor', 'Wellness', 'Gym', 'Therapy'],
+  'Education': ['Tuition', 'Books', 'Courses', 'Software', 'Supplies'],
+  'Personal': ['Clothing', 'Grooming', 'Laundry', 'Subscriptions'],
+  'Income': ['Salary', 'Freelance', 'Scholarship', 'Gift', 'Investment Return', 'Sales'],
+  'Other': ['Taxes', 'Donations', 'Fees', 'Maintenance', 'Misc']
 };
 
-export default function TransactionForm({ onSuccess }) {
+export default function TransactionForm({ onSuccess, editData, onCancel }) {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,6 +30,13 @@ export default function TransactionForm({ onSuccess }) {
       usefulness: 'High'
     }
   });
+
+  useEffect(() => {
+    if (editData) {
+      setFormData(editData);
+      setIsOpen(true);
+    }
+  }, [editData]);
 
   // Listen for Calculator Result
   useEffect(() => {
@@ -51,21 +60,27 @@ export default function TransactionForm({ onSuccess }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch('/api/transactions', {
-        method: 'POST',
+      const url = editData ? `/api/transactions/${editData._id}` : '/api/transactions';
+      const method = editData ? 'PUT' : 'POST';
+      
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
       if (res.ok) {
-        setFormData({
-          amount: '',
-          type: 'expense',
-          category: 'Essential',
-          subcategory: 'Groceries',
-          description: '',
-          matrix: { importance: 'High', usefulness: 'High' }
-        });
+        if (!editData) {
+          setFormData({
+            amount: '',
+            type: 'expense',
+            category: 'Essential',
+            subcategory: 'Groceries',
+            description: '',
+            matrix: { importance: 'High', usefulness: 'High' }
+          });
+        }
         setIsOpen(false);
+        if (onCancel) onCancel();
         if (onSuccess) onSuccess();
       }
     } catch (error) {
@@ -102,7 +117,10 @@ export default function TransactionForm({ onSuccess }) {
                 </div>
               </div>
               <button 
-                onClick={() => setIsOpen(false)} 
+                onClick={() => {
+                  setIsOpen(false);
+                  if (onCancel) onCancel();
+                }} 
                 className="text-slate-400 hover:text-slate-600 transition-colors p-2 hover:bg-slate-50 rounded-full"
               >
                 <X className="h-6 w-6" />
@@ -218,7 +236,7 @@ export default function TransactionForm({ onSuccess }) {
                 disabled={loading || !formData.amount}
                 className="w-full rounded-2xl bg-blue-600 py-4 font-black tracking-widest text-white transition-all hover:bg-blue-500 shadow-xl shadow-blue-500/20 disabled:opacity-50 active:scale-[0.98] uppercase text-xs"
               >
-                {loading ? 'Processing...' : 'Secure Transaction'}
+                {loading ? 'Processing...' : editData ? 'Execute Update' : 'Secure Transaction'}
               </button>
             </form>
           </div>

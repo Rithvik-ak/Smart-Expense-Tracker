@@ -9,16 +9,18 @@ import {
 } from 'recharts';
 import { 
   FileText, Calendar, Download, TrendingUp, TrendingDown, 
-  Filter, PieChart as PieIcon, Activity, ArrowLeft, Zap
+  Filter, PieChart as PieIcon, Activity, ArrowLeft, Zap, Edit3, Trash2
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import TransactionForm from '@/components/TransactionForm';
 
 export default function ReportsPage() {
   const { user, loading: authLoading } = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('30'); // '7' or '30'
+  const [editItem, setEditItem] = useState(null);
 
   useEffect(() => {
     if (user) fetchTransactions();
@@ -33,6 +35,16 @@ export default function ReportsPage() {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm('Are you sure you want to delete this record? This action is irreversible.')) return;
+    try {
+      const res = await fetch(`/api/transactions/${id}`, { method: 'DELETE' });
+      if (res.ok) fetchTransactions();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -231,6 +243,81 @@ export default function ReportsPage() {
               </div>
            </div>
         </div>
+
+        {/* Transaction Management Section */}
+        <div className="mt-16 glass-card rounded-[40px] overflow-hidden p-10">
+          <div className="flex items-center justify-between mb-12">
+            <h3 className="text-2xl font-black text-white tracking-tight">Ledger Operations</h3>
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{filteredData.length} Records Detected</p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-white/5 text-slate-500">
+                  <th className="pb-6 font-black uppercase tracking-widest text-[10px]">Reference</th>
+                  <th className="pb-6 font-black uppercase tracking-widest text-[10px] text-center">Category</th>
+                  <th className="pb-6 font-black uppercase tracking-widest text-[10px] text-center">Protocol</th>
+                  <th className="pb-6 font-black uppercase tracking-widest text-[10px] text-right">Value</th>
+                  <th className="pb-6 font-black uppercase tracking-widest text-[10px] text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {filteredData.map((t) => (
+                  <tr key={t._id} className="group/row hover:bg-white/[0.02] transition-colors">
+                    <td className="py-6">
+                      <div className="font-black text-slate-200">{t.description || t.category}</div>
+                      <div className="text-[10px] font-black text-slate-600 uppercase tracking-widest mt-1">{new Date(t.date).toLocaleDateString()}</div>
+                    </td>
+                    <td className="py-6 text-center">
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">{t.category}</span>
+                    </td>
+                    <td className="py-6 text-center">
+                       <span className={`inline-flex items-center rounded-lg px-3 py-1 text-[10px] font-black border ${
+                         t.matrix?.quadrant === 'Q1' ? 'border-emerald-500/20 text-emerald-400 bg-emerald-500/5' :
+                         t.matrix?.quadrant === 'Q2' ? 'border-blue-500/20 text-blue-400 bg-blue-500/5' :
+                         t.matrix?.quadrant === 'Q3' ? 'border-orange-500/20 text-orange-400 bg-orange-600/5' :
+                         'border-red-500/20 text-red-400 bg-red-500/5'
+                       }`}>
+                         {t.matrix?.quadrant}
+                       </span>
+                    </td>
+                    <td className={`py-6 text-right font-black ${t.type === 'expense' ? 'text-slate-200' : 'text-emerald-400'}`}>
+                      {t.type === 'expense' ? '-' : '+'}{user.currency || '₹'}{t.amount.toLocaleString()}
+                    </td>
+                    <td className="py-6 text-right">
+                       <div className="flex justify-end gap-3 opacity-0 group-hover/row:opacity-100 transition-opacity">
+                          <button 
+                           onClick={() => setEditItem(t)}
+                           className="p-2 rounded-xl bg-blue-600/10 text-blue-400 hover:bg-blue-600 hover:text-white transition-all border border-blue-500/20"
+                          >
+                            <Edit3 className="h-4 w-4" />
+                          </button>
+                          <button 
+                           onClick={() => handleDelete(t._id)}
+                           className="p-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all border border-red-500/20"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                       </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Edit Modal */}
+        {editItem && (
+          <TransactionForm 
+            editData={editItem} 
+            onSuccess={() => {
+              setEditItem(null);
+              fetchTransactions();
+            }}
+            onCancel={() => setEditItem(null)}
+          />
+        )}
       </main>
     </div>
   );
