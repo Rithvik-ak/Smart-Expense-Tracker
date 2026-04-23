@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
-import { BarChart3, LogOut, User, Menu, X, Zap, PieChart, Activity, UserCircle } from 'lucide-react';
+import { BarChart3, LogOut, User, Menu, X, Zap, PieChart, Activity, UserCircle, MessageSquare } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navbar() {
@@ -29,6 +29,7 @@ export default function Navbar() {
               <NavLink href="/dashboard" label="Dashboard" icon={Activity} />
               <NavLink href="/reports" label="Analytics" icon={PieChart} />
               <NavLink href="/advisor" label="Advisor" icon={Zap} />
+              <NavLink href="/chat" label="AI Chat" icon={MessageSquare} />
               <NavLink href="/profile" label="Profile" icon={UserCircle} />
             </div>
           </div>
@@ -67,6 +68,7 @@ export default function Navbar() {
           <MobileNavLink href="/dashboard" label="Dashboard" onClick={() => setIsOpen(false)} />
           <MobileNavLink href="/reports" label="Analytics" onClick={() => setIsOpen(false)} />
           <MobileNavLink href="/advisor" label="Advisor" onClick={() => setIsOpen(false)} />
+          <MobileNavLink href="/chat" label="AI Chat" onClick={() => setIsOpen(false)} />
           <MobileNavLink href="/profile" label="Profile" onClick={() => setIsOpen(false)} />
           <div className="pt-4 mt-4 border-t border-white/5">
             <button
