@@ -30,82 +30,99 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-64px)] items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-slate-50">
-      <div className="w-full space-y-8 max-w-md animate-in fade-in zoom-in duration-500">
+    <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-slate-950 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 rounded-full blur-[120px]" />
+      </div>
+
+      <div className="w-full space-y-12 max-w-md relative z-10">
         <div className="text-center">
-          <div className="flex justify-center">
-            <div className="rounded-2xl bg-blue-600 p-3 shadow-xl shadow-blue-500/20 ring-4 ring-white">
-              <BarChart3 className="h-8 w-8 text-white" />
+          <Link href="/" className="inline-flex justify-center group mb-12">
+            <div className="rounded-[24px] bg-gradient-to-tr from-blue-600 to-indigo-600 p-4 shadow-2xl shadow-blue-500/20 group-hover:scale-110 transition-transform duration-500">
+              <BarChart3 className="h-10 w-10 text-white" />
             </div>
-          </div>
-          <h2 className="mt-8 text-4xl font-black tracking-tight text-slate-900">
-            Welcome Back
+          </Link>
+          <h2 className="text-5xl font-black tracking-tighter text-white mb-4">
+            Welcome <span className="text-gradient">Back</span>
           </h2>
-          <p className="mt-3 text-sm font-bold text-slate-400 uppercase tracking-widest">
-            Access your decision system
+          <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
+            Sync with the decision intelligence core
           </p>
         </div>
         
-        <div className="bg-white rounded-3xl p-8 shadow-2xl shadow-slate-200/50 ring-1 ring-slate-100">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+        <div className="glass-card rounded-[40px] p-10 relative overflow-hidden">
+          <form className="space-y-8" onSubmit={handleSubmit}>
             {error && (
-              <div className="rounded-xl bg-red-50 p-4 ring-1 ring-red-100">
-                <p className="text-sm font-bold text-red-600 text-center">{error}</p>
-              </div>
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-2xl bg-red-500/10 p-4 border border-red-500/20"
+              >
+                <p className="text-[10px] font-black text-red-400 text-center uppercase tracking-widest">{error}</p>
+              </motion.div>
             )}
             
-            <div className="space-y-4">
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <Mail className="h-5 w-5 text-slate-400" />
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-2">Communication Node</label>
+                <div className="relative group">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-6">
+                    <Mail className="h-5 w-5 text-slate-500 group-focus-within:text-blue-400 transition-colors" />
+                  </div>
+                  <input
+                    id="email-address"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    className="block w-full rounded-[24px] border border-white/10 bg-white/5 py-5 pl-14 pr-6 text-white placeholder:text-slate-600 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all font-bold outline-none tracking-tight"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
-                <input
-                  id="email-address"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pl-12 text-slate-900 placeholder:text-slate-400 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium"
-                  placeholder="Email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
               </div>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <Lock className="h-5 w-5 text-slate-400" />
+
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-2">Security Key</label>
+                <div className="relative group">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-6">
+                    <Lock className="h-5 w-5 text-slate-500 group-focus-within:text-blue-400 transition-colors" />
+                  </div>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    className="block w-full rounded-[24px] border border-white/10 bg-white/5 py-5 pl-14 pr-6 text-white placeholder:text-slate-600 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all font-bold outline-none tracking-tight"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </div>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  className="block w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pl-12 text-slate-900 placeholder:text-slate-400 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
               </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="group relative flex w-full justify-center rounded-2xl bg-blue-600 px-3 py-4 text-sm font-black text-white transition-all hover:bg-blue-500 shadow-xl shadow-blue-500/30 disabled:opacity-50"
+              className="group relative flex w-full justify-center rounded-[24px] bg-blue-600 py-5 text-[10px] font-black text-white transition-all hover:bg-blue-500 shadow-2xl shadow-blue-600/30 disabled:opacity-50 uppercase tracking-[0.2em]"
             >
               {loading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
-                'Sign in to Dashboard'
+                'Access Dashboard'
               )}
             </button>
           </form>
 
-          <p className="mt-8 text-center text-sm font-bold text-slate-400 uppercase tracking-tight">
-            Not a member?{' '}
-            <Link href="/signup" className="text-blue-600 hover:text-blue-500 transition-colors">
-              Create an account
+          <p className="mt-10 text-center text-[10px] font-black text-slate-500 uppercase tracking-widest">
+            New operative?{' '}
+            <Link href="/signup" className="text-blue-400 hover:text-white transition-colors">
+              Initialize Account
             </Link>
           </p>
         </div>

@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
-import { BarChart3, LogOut, User, Menu, X } from 'lucide-react';
+import { BarChart3, LogOut, User, Menu, X, Zap, PieChart, Activity, UserCircle } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navbar() {
@@ -10,37 +10,38 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-white/90 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <nav className="fixed top-0 z-[100] w-full border-b border-white/5 bg-slate-950/50 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center gap-2">
-              <BarChart3 className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-slate-900 hidden sm:block tracking-tight">
-                Smart Expense
+            <Link href="/" className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <Zap className="h-5 w-5 text-white" />
+              </div>
+              <span className="text-xl font-black text-white hidden sm:block tracking-tighter">
+                SmartExpense
               </span>
             </Link>
           </div>
 
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              <Link href="/" className="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</Link>
-              <Link href="/dashboard" className="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Dashboard</Link>
-              <Link href="/reports" className="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Reports</Link>
-              <Link href="/advisor" className="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Pre-Spend Advisor</Link>
-              <Link href="/profile" className="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profile</Link>
+          <div className="hidden lg:block">
+            <div className="ml-10 flex items-baseline space-x-1">
+              <NavLink href="/dashboard" label="Dashboard" icon={Activity} />
+              <NavLink href="/reports" label="Analytics" icon={PieChart} />
+              <NavLink href="/advisor" label="Advisor" icon={Zap} />
+              <NavLink href="/profile" label="Profile" icon={UserCircle} />
             </div>
           </div>
 
-          <div className="hidden md:block">
-            <div className="ml-4 flex items-center md:ml-6 gap-4">
-              <div className="flex items-center gap-2 text-sm text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full ring-1 ring-slate-200">
-                <User className="h-4 w-4" />
-                <span>{user?.email}</span>
+          <div className="hidden lg:block">
+            <div className="ml-4 flex items-center md:ml-6 gap-6">
+              <div className="flex items-center gap-3 text-xs font-black text-slate-400 bg-white/5 px-4 py-2 rounded-xl ring-1 ring-white/10 uppercase tracking-widest">
+                <User className="h-4 w-4 text-blue-400" />
+                <span>{user?.email?.split('@')[0]}</span>
               </div>
               <button
                 onClick={logout}
-                className="rounded-full bg-slate-100 p-2 text-slate-400 hover:text-red-500 transition-colors ring-1 ring-slate-200"
+                className="rounded-xl bg-white/5 p-2.5 text-slate-400 hover:text-red-400 hover:bg-red-400/10 transition-all ring-1 ring-white/10"
                 title="Logout"
               >
                 <LogOut className="h-5 w-5" />
@@ -49,10 +50,10 @@ export default function Navbar() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="-mr-2 flex md:hidden">
+          <div className="-mr-2 flex lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-900 focus:outline-none"
+              className="inline-flex items-center justify-center rounded-xl p-2.5 text-slate-400 hover:bg-white/5 hover:text-white transition-all ring-1 ring-white/10"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -62,20 +63,45 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-b border-slate-200 px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <Link href="/" className="text-slate-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Home</Link>
-          <Link href="/dashboard" className="text-slate-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Dashboard</Link>
-          <Link href="/reports" className="text-slate-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Reports</Link>
-          <Link href="/advisor" className="text-slate-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Pre-Spend Advisor</Link>
-          <Link href="/profile" className="text-slate-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Profile</Link>
-          <button
-            onClick={logout}
-            className="text-red-600 hover:bg-slate-100 block w-full text-left px-3 py-2 rounded-md text-base font-medium"
-          >
-            Logout
-          </button>
+        <div className="lg:hidden bg-slate-900 border-b border-white/5 px-4 pt-2 pb-6 space-y-2">
+          <MobileNavLink href="/dashboard" label="Dashboard" onClick={() => setIsOpen(false)} />
+          <MobileNavLink href="/reports" label="Analytics" onClick={() => setIsOpen(false)} />
+          <MobileNavLink href="/advisor" label="Advisor" onClick={() => setIsOpen(false)} />
+          <MobileNavLink href="/profile" label="Profile" onClick={() => setIsOpen(false)} />
+          <div className="pt-4 mt-4 border-t border-white/5">
+            <button
+              onClick={logout}
+              className="flex items-center gap-3 text-red-400 hover:bg-red-400/10 w-full px-4 py-3 rounded-xl text-sm font-black uppercase tracking-widest transition-all"
+            >
+              <LogOut className="h-5 w-5" /> Logout
+            </button>
+          </div>
         </div>
       )}
     </nav>
+  );
+}
+
+function NavLink({ href, label, icon: Icon }) {
+  return (
+    <Link 
+      href={href} 
+      className="flex items-center gap-2 text-slate-400 hover:text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all hover:bg-white/5"
+    >
+      <Icon className="h-3.5 w-3.5" />
+      {label}
+    </Link>
+  );
+}
+
+function MobileNavLink({ href, label, onClick }) {
+  return (
+    <Link 
+      href={href} 
+      onClick={onClick}
+      className="text-slate-300 hover:text-white block px-4 py-3 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-white/5 transition-all"
+    >
+      {label}
+    </Link>
   );
 }

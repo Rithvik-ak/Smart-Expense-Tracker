@@ -34,6 +34,11 @@ export async function POST(req) {
 
     return response;
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Login Error:", error);
+    let errorMessage = error.message;
+    if (error.message.includes('ENOTFOUND')) {
+      errorMessage = "Database connection error: The MongoDB host could not be resolved. Please check your MONGODB_URI.";
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
