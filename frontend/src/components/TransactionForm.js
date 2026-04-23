@@ -63,10 +63,11 @@ export default function TransactionForm({ onSuccess, editData, onCancel }) {
       const url = editData ? `/api/transactions/${editData._id}` : '/api/transactions';
       const method = editData ? 'PUT' : 'POST';
       
+      const { _id, __v, user: userId, ...cleanData } = formData;
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(editData ? cleanData : formData),
       });
       if (res.ok) {
         if (!editData) {

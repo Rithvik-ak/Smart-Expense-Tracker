@@ -12,7 +12,7 @@ export async function PUT(req, { params }) {
     const decoded = verifyToken(token);
     if (!decoded) return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
 
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
 
     const transaction = await Transaction.findOneAndUpdate(
@@ -40,7 +40,7 @@ export async function DELETE(req, { params }) {
     const decoded = verifyToken(token);
     if (!decoded) return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
 
-    const { id } = params;
+    const { id } = await params;
     const transaction = await Transaction.findOneAndDelete({ _id: id, user: decoded.id });
 
     if (!transaction) {
