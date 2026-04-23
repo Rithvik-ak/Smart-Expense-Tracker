@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import { calculateAnalysis } from '@/lib/economicEngine';
-import { ShieldAlert, Info, TrendingDown, Clock, ArrowRight, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
+import { ShieldAlert, Info, TrendingDown, Clock, ArrowRight, CheckCircle2, AlertTriangle, XCircle, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function PreSpendAdvisor() {
   const { user } = useAuth();

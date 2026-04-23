@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import { User, Mail, Calendar, Target, ShieldCheck, Zap, Edit3, X, Save, Wallet } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ProfilePage() {
   const { user, loading, updateUser } = useAuth();
@@ -252,5 +253,4 @@ function DetailItem({ icon: Icon, label, value, highlight }) {
 
 function Check({ className }) {
   return <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>;
-}
 }

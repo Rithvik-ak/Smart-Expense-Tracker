@@ -11,7 +11,7 @@ import CategoryProgress from '@/components/CategoryProgress';
 import { SpendingTrendChart, CategoryComparisonChart } from '@/components/EnhancedCharts';
 import { calculateDashboardInsights } from '@/lib/insightScanner';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { Wallet, TrendingUp, TrendingDown, Target, Zap, LayoutGrid, Tag, Brain, BarChart3, ArrowUpRight } from 'lucide-react';
+import { Wallet, TrendingUp, TrendingDown, Target, Zap, LayoutGrid, Tag, Brain, BarChart3, ArrowUpRight, Activity, Sparkles, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';

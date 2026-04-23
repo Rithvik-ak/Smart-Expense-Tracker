@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
-import { ArrowRight, Zap, Target, BarChart3, Shield, PieChart, Activity, Globe, MousePointer2 } from 'lucide-react';
+import { ArrowRight, Zap, Target, BarChart3, Shield, PieChart, Activity, Globe, MousePointer2, Sparkles, Brain } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 

@@ -12,6 +12,7 @@ import {
   Filter, PieChart as PieIcon, Activity, ArrowLeft, Zap
 } from 'lucide-react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 export default function ReportsPage() {
   const { user, loading: authLoading } = useAuth();
