@@ -6,8 +6,8 @@ import { Zap } from 'lucide-react';
 export default function LoadingScreen() {
   return (
     <motion.div 
-      initial={{ opacity: 1 }}
-      animate={{ opacity: 0 }}
+      initial={{ opacity: 1, pointerEvents: 'auto' }}
+      animate={{ opacity: 0, pointerEvents: 'none' }}
       transition={{ duration: 1, delay: 2 }}
       onAnimationComplete={() => document.body.style.overflow = 'auto'}
       className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#030712]"
