@@ -88,7 +88,7 @@ export default function TransactionForm({ onSuccess, editData, onCancel }) {
   };
 
   return (
-    <div className="w-full max-w-xl rounded-[40px] bg-slate-900 p-10 shadow-2xl border border-white/10 overflow-hidden relative">
+    <div className="w-full max-w-xl rounded-[40px] bg-slate-900 p-10 shadow-2xl border border-white/10 overflow-y-auto max-h-[90vh] relative custom-scrollbar">
       <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
           <CreditCard className="h-40 w-40" />
       </div>
