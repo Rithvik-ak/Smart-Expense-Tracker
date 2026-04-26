@@ -16,7 +16,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-12">
             <Link href="/" className="flex items-center gap-3 group">
-              <motion.div 
+              <motion.div
                 whileHover={{ rotate: 180 }}
                 className="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 shadow-lg shadow-blue-500/20 flex items-center justify-center"
               >
@@ -26,10 +26,10 @@ export default function Navbar() {
             </Link>
 
             <div className="hidden lg:flex items-center gap-8">
-               <NavLink href="/dashboard" icon={LayoutDashboard} label="Command" />
-               <NavLink href="/reports" icon={BarChart3} label="Neural" />
-               <NavLink href="/advisor" icon={Settings} label="System" />
-               <NavLink href="/chat" icon={MessageSquare} label="Bridge" />
+              <NavLink href="/dashboard" icon={LayoutDashboard} label="Dashboard" />
+              <NavLink href="/reports" icon={BarChart3} label="Reports" />
+              <NavLink href="/advisor" icon={Settings} label="Advisor" />
+              <NavLink href="/chat" icon={MessageSquare} label="Astra" />
             </div>
           </div>
 
@@ -37,13 +37,13 @@ export default function Navbar() {
             {user ? (
               <div className="flex items-center gap-4">
                 <div className="hidden sm:block text-right">
-                   <p className="text-[10px] font-black text-white uppercase tracking-widest">{user?.name || user?.email?.split('@')[0]}</p>
-                   <p className="text-[8px] font-black text-slate-500 uppercase tracking-[0.2em]">Node Active</p>
+                  <p className="text-[10px] font-black text-white uppercase tracking-widest">{user?.name || user?.email?.split('@')[0]}</p>
+                  <p className="text-[8px] font-black text-slate-500 uppercase tracking-[0.2em]">Node Active</p>
                 </div>
                 <Link href="/profile" className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
-                   <User className="h-5 w-5 text-slate-400" />
+                  <User className="h-5 w-5 text-slate-400" />
                 </Link>
-                <button 
+                <button
                   onClick={logout}
                   className="h-10 w-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all text-red-400"
                 >
@@ -56,8 +56,8 @@ export default function Navbar() {
                 <Link href="/signup" className="rounded-xl bg-white px-6 py-2.5 text-[10px] font-black text-slate-950 uppercase tracking-widest hover:scale-105 transition-transform">Access</Link>
               </div>
             )}
-            
-            <button 
+
+            <button
               onClick={() => setIsOpen(!isOpen)}
               className="lg:hidden p-2 text-slate-400"
             >
@@ -69,17 +69,17 @@ export default function Navbar() {
 
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             className="lg:hidden bg-slate-950 border-t border-white/5 overflow-hidden"
           >
             <div className="p-6 space-y-4">
-              <NavLink href="/dashboard" icon={LayoutDashboard} label="Command" onClick={() => setIsOpen(false)} />
-              <NavLink href="/reports" icon={BarChart3} label="Neural" onClick={() => setIsOpen(false)} />
-              <NavLink href="/advisor" icon={Settings} label="System" onClick={() => setIsOpen(false)} />
-              <NavLink href="/chat" icon={MessageSquare} label="Bridge" onClick={() => setIsOpen(false)} />
+              <NavLink href="/dashboard" icon={LayoutDashboard} label="Dashboard" onClick={() => setIsOpen(false)} />
+              <NavLink href="/reports" icon={BarChart3} label="Reports" onClick={() => setIsOpen(false)} />
+              <NavLink href="/advisor" icon={Settings} label="Advisor" onClick={() => setIsOpen(false)} />
+              <NavLink href="/chat" icon={MessageSquare} label="Astra" onClick={() => setIsOpen(false)} />
             </div>
           </motion.div>
         )}
@@ -90,13 +90,13 @@ export default function Navbar() {
 
 function NavLink({ href, icon: Icon, label, onClick }) {
   return (
-    <Link 
-      href={href} 
+    <Link
+      href={href}
       onClick={onClick}
       className="flex items-center gap-2 text-[10px] font-black text-slate-500 hover:text-white transition-colors uppercase tracking-[0.2em] group"
     >
-       <Icon className="h-4 w-4 group-hover:scale-110 transition-transform" />
-       {label}
+      <Icon className="h-4 w-4 group-hover:scale-110 transition-transform" />
+      {label}
     </Link>
   );
 }
