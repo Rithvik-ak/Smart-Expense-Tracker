@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Calculator, X, RotateCcw, Check } from 'lucide-react';
+import { Calculator, X, RotateCcw, Check, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function MiniCalculator() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,6 +28,7 @@ export default function MiniCalculator() {
   const calculate = () => {
     try {
       const parts = equation.split(' ');
+      if (parts.length < 2) return;
       const val1 = parseFloat(parts[0]);
       const val2 = parseFloat(display);
       let res = 0;
@@ -55,90 +57,104 @@ export default function MiniCalculator() {
   };
 
   const sendToForm = () => {
-    // Custom event to communicate with TransactionForm
     const event = new CustomEvent('setAmount', { detail: display });
     window.dispatchEvent(event);
     setIsOpen(false);
   };
 
   return (
-    <div className="fixed bottom-24 right-8 z-[60]">
+    <div className="fixed bottom-32 right-10 z-[60]">
       {/* Floating Button */}
       {!isOpen && (
-        <button
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={() => setIsOpen(true)}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-800 text-white shadow-xl shadow-slate-900/20 ring-1 ring-slate-700 transition-all hover:scale-110 active:scale-95"
-          title="Open Calculator"
+          className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 text-white shadow-2xl hover:bg-white/10 transition-colors"
+          title="Neural Calculator"
         >
           <Calculator className="h-6 w-6" />
-        </button>
+        </motion.button>
       )}
 
       {/* Calculator Popup */}
-      {isOpen && (
-        <div className="w-64 animate-in fade-in zoom-in slide-in-from-bottom-4 duration-300 rounded-2xl bg-white/80 backdrop-blur-xl border border-slate-200 shadow-2xl overflow-hidden p-4">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Calculator</span>
-            <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-slate-600">
-              <X className="h-4 w-4" />
-            </button>
-          </div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="w-72 rounded-[32px] glass-card p-6 border border-white/10 shadow-2xl overflow-hidden"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-3 w-3 text-blue-400" />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Neural Link</span>
+              </div>
+              <button onClick={() => setIsOpen(false)} className="text-slate-500 hover:text-white transition-colors">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
 
-          {/* Display */}
-          <div className="mb-4 bg-slate-900/5 rounded-xl p-3 text-right">
-            <div className="text-[10px] text-slate-400 h-4 font-mono">{equation}</div>
-            <div className="text-2xl font-black text-slate-900 truncate font-mono tracking-tighter">{display}</div>
-          </div>
+            {/* Display */}
+            <div className="mb-6 bg-white/[0.03] rounded-2xl p-5 text-right border border-white/5">
+              <div className="text-[10px] text-slate-600 h-4 font-black uppercase tracking-widest">{equation}</div>
+              <div className="text-3xl font-black text-white truncate tracking-tighter leading-none mt-1">{display}</div>
+            </div>
 
-          {/* Keypad */}
-          <div className="grid grid-cols-4 gap-2">
-            {['7', '8', '9', '/'].map(btn => (
-              <CalcBtn key={btn} val={btn} onClick={btn === '/' ? () => handleOperator('/') : () => handleNumber(btn)} />
-            ))}
-            {['4', '5', '6', '*'].map(btn => (
-              <CalcBtn key={btn} val={btn} onClick={btn === '*' ? () => handleOperator('*') : () => handleNumber(btn)} />
-            ))}
-            {['1', '2', '3', '-'].map(btn => (
-              <CalcBtn key={btn} val={btn} onClick={btn === '-' ? () => handleOperator('-') : () => handleNumber(btn)} />
-            ))}
-            <CalcBtn val="0" onClick={() => handleNumber('0')} />
-            <CalcBtn val="." onClick={() => handleNumber('.')} />
-            <CalcBtn val="C" onClick={clear} highlighted />
-            <CalcBtn val="+" onClick={() => handleOperator('+')} />
-          </div>
+            {/* Keypad */}
+            <div className="grid grid-cols-4 gap-3">
+              {['7', '8', '9', '/'].map(btn => (
+                <CalcBtn key={btn} val={btn} onClick={btn === '/' ? () => handleOperator('/') : () => handleNumber(btn)} />
+              ))}
+              {['4', '5', '6', '*'].map(btn => (
+                <CalcBtn key={btn} val={btn} onClick={btn === '*' ? () => handleOperator('*') : () => handleNumber(btn)} />
+              ))}
+              {['1', '2', '3', '-'].map(btn => (
+                <CalcBtn key={btn} val={btn} onClick={btn === '-' ? () => handleOperator('-') : () => handleNumber(btn)} />
+              ))}
+              <CalcBtn val="0" onClick={() => handleNumber('0')} />
+              <CalcBtn val="." onClick={() => handleNumber('.')} />
+              <CalcBtn val="C" onClick={clear} highlighted />
+              <CalcBtn val="+" onClick={() => handleOperator('+')} />
+            </div>
 
-          <div className="grid grid-cols-2 gap-2 mt-4">
-            <button
-              onClick={calculate}
-              className="flex items-center justify-center rounded-xl bg-slate-900 py-3 text-white transition-all hover:bg-slate-800 font-bold text-sm shadow-lg shadow-slate-900/10"
-            >
-              =
-            </button>
-            <button
-              disabled={display === '0' || display === 'Error'}
-              onClick={sendToForm}
-              className="flex items-center justify-center rounded-xl bg-blue-600 py-3 text-white transition-all hover:bg-blue-500 font-bold text-sm shadow-lg shadow-blue-500/10 disabled:opacity-50"
-            >
-              <Check className="h-4 w-4 mr-1 stroke-[3px]" /> Use
-            </button>
-          </div>
-        </div>
-      )}
+            <div className="grid grid-cols-2 gap-3 mt-6">
+              <button
+                onClick={calculate}
+                className="flex items-center justify-center rounded-xl bg-white text-slate-950 py-3 transition-all hover:bg-slate-200 font-black text-xs uppercase tracking-widest shadow-xl"
+              >
+                Execute
+              </button>
+              <button
+                disabled={display === '0' || display === 'Error'}
+                onClick={sendToForm}
+                className="flex items-center justify-center rounded-xl bg-blue-600 py-3 text-white transition-all hover:bg-blue-500 font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-500/20 disabled:opacity-50"
+              >
+                <Check className="h-4 w-4 mr-1 stroke-[3px]" /> Sync
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 function CalcBtn({ val, onClick, highlighted = false }) {
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
       onClick={onClick}
-      className={`flex h-10 items-center justify-center rounded-lg text-sm font-black transition-all active:scale-90 ${
+      className={`flex h-12 items-center justify-center rounded-xl text-[11px] font-black transition-all ${
         highlighted 
-        ? 'bg-red-50 text-red-500 border border-red-100' 
-        : 'bg-white text-slate-900 border border-slate-100 hover:bg-slate-50'
+        ? 'bg-red-500/20 text-red-400 border border-red-500/20' 
+        : 'bg-white/5 text-slate-300 border border-white/5 hover:bg-white/10 hover:text-white'
       }`}
     >
       {val}
-    </button>
+    </motion.button>
   );
 }
+
