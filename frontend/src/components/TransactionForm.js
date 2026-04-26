@@ -38,6 +38,13 @@ export default function TransactionForm({ onSuccess, editData, onCancel }) {
         amount: editData.amount.toString()
       });
     }
+    
+    const handleSetAmount = (e) => {
+      setFormData(prev => ({ ...prev, amount: e.detail.toString() }));
+    };
+    
+    window.addEventListener('setAmount', handleSetAmount);
+    return () => window.removeEventListener('setAmount', handleSetAmount);
   }, [editData]);
 
   const handleCategoryChange = (cat) => {

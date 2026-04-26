@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#030712] text-slate-50 leading-relaxed font-sans overflow-hidden">
+      <body className="min-h-full flex flex-col bg-[#030712] text-slate-50 leading-relaxed font-sans">
         <LoadingScreen />
         <GlobalEffects />
         <AuthProvider>

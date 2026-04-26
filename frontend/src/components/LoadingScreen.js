@@ -2,14 +2,21 @@
 
 import { motion } from 'framer-motion';
 import { Zap } from 'lucide-react';
+import { useEffect } from 'react';
 
 export default function LoadingScreen() {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+  }, []);
+
   return (
     <motion.div 
       initial={{ opacity: 1, pointerEvents: 'auto' }}
       animate={{ opacity: 0, pointerEvents: 'none' }}
       transition={{ duration: 1, delay: 2 }}
-      onAnimationComplete={() => document.body.style.overflow = 'auto'}
+      onAnimationComplete={() => {
+        document.body.style.overflow = 'auto';
+      }}
       className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#030712]"
       style={{ overflow: 'hidden' }}
     >
