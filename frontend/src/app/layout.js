@@ -1,29 +1,28 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import GlobalEffects from "@/components/GlobalEffects";
+import LoadingScreen from "@/components/LoadingScreen";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export const metadata = {
-  title: "Smart Expense Decision System",
-  description: "Advanced financial decision engine with 3D visualization",
+  title: "Astra — The Operating System for Students",
+  description: "Your life, optimized. Manage money, time, and goals in one futuristic system.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 leading-relaxed font-sans">
+      <body className="min-h-full flex flex-col bg-[#030712] text-slate-50 leading-relaxed font-sans overflow-hidden">
+        <LoadingScreen />
+        <GlobalEffects />
         <AuthProvider>
           {children}
         </AuthProvider>
@@ -31,3 +30,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+

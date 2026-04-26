@@ -10,11 +10,18 @@ const CATEGORY_MAP_LIST = {
 export const calculateDashboardInsights = (transactions, user) => {
   const now = new Date();
   const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+  const prevWeekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 14);
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  // Weekly Total
+  // Weekly Totals for comparison
   const weeklyTransactions = transactions.filter(t => new Date(t.date) >= weekStart);
+  const prevWeeklyTransactions = transactions.filter(t => {
+    const d = new Date(t.date);
+    return d >= prevWeekStart && d < weekStart;
+  });
+
   const weeklyTotal = weeklyTransactions.reduce((acc, t) => acc + (t.type === 'expense' ? t.amount : 0), 0);
+  const prevWeeklyTotal = prevWeeklyTransactions.reduce((acc, t) => acc + (t.type === 'expense' ? t.amount : 0), 0);
 
   // Category Consumption
   const categoryTotals = transactions
@@ -28,36 +35,60 @@ export const calculateDashboardInsights = (transactions, user) => {
   const insights = [];
   const limits = user?.categoryLimits || {};
   
+  // 1. Weekly comparison insight
+  if (prevWeeklyTotal > 0) {
+    const diff = ((weeklyTotal - prevWeeklyTotal) / prevWeeklyTotal) * 100;
+    if (diff > 10) {
+      insights.push({
+        id: 'weekly-spike',
+        text: `Velocity Spike: You spent ${Math.abs(diff).toFixed(0)}% more than last week. Analyze lifestyle clusters.`,
+        color: 'red'
+      });
+    } else if (diff < -10) {
+      insights.push({
+        id: 'weekly-drop',
+        text: `Efficiency Gain: Outflow is down ${Math.abs(diff).toFixed(0)}%. Redirecting surplus to Investment Node recommended.`,
+        color: 'emerald'
+      });
+    }
+  }
+
+  // 2. Category specific insights
   Object.keys(categoryTotals).forEach(cat => {
     const total = categoryTotals[cat];
-    const limit = limits[cat] || (user?.budget / 5) || 5000; // Added safety default
+    const limit = limits[cat] || (user?.budget / 5) || 5000;
     const usage = (total / limit) * 100;
 
     if (usage > 100) {
       insights.push({
         id: `over-${cat}`,
-        category: cat,
-        status: 'critical',
-        text: `You are overspending on ${cat} this month 🍔`,
+        text: `Critical: ${cat} node has exceeded threshold by ${(usage - 100).toFixed(0)}%. Immediate correction required.`,
         color: 'red'
       });
     } else if (usage > 80) {
       insights.push({
         id: `warn-${cat}`,
-        category: cat,
-        status: 'warn',
-        text: `Nearing budget limit for ${cat} ⚠️`,
+        text: `Saturation Alert: ${cat} resources at ${usage.toFixed(0)}% capacity. Scale back non-essential operations.`,
         color: 'yellow'
       });
     }
   });
 
-  if (insights.length === 0 && (user?.budget > 0 || user?.income > 0)) {
+  // 3. Potential Savings
+  const potentialSavings = Math.round((user?.budget || 0) - weeklyTotal * 4);
+  if (potentialSavings > 0) {
     insights.push({
-      id: 'good-job',
-      status: 'success',
-      text: 'Good job! You stayed within your budget 🎯',
-      color: 'green'
+      id: 'savings-proj',
+      text: `Projection: Optimal operation could yield ${user.currency || '₹'}${potentialSavings.toLocaleString()} in surplus this cycle.`,
+      color: 'indigo'
+    });
+  }
+
+  if (insights.length === 0) {
+    insights.push({
+      id: 'system-stable',
+      text: 'System Stable: Fiscal operations are within projected parameters. Maintain current trajectory.',
+      color: 'emerald'
     });
   }
 
@@ -84,3 +115,4 @@ export const calculateDashboardInsights = (transactions, user) => {
     }))
   };
 };
+
