@@ -263,5 +263,3 @@ function FooterLink({ href, label }) {
     </Link>
   );
 }
- );
-}
