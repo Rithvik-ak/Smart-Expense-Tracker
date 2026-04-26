@@ -5,8 +5,10 @@ import { motion, useScroll, useSpring } from 'framer-motion';
 
 export default function GlobalEffects() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { scrollYProgress } = useScroll();
+  
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -22,6 +24,10 @@ export default function GlobalEffects() {
 
     const handleMouseMove = (e) => {
       setMousePos({ x: e.clientX, y: e.clientY });
+      
+      const target = e.target;
+      const isClickable = target.closest('button') || target.closest('a') || target.closest('input') || target.closest('select');
+      setIsHovering(!!isClickable);
     };
     window.addEventListener('mousemove', handleMouseMove);
 
@@ -38,8 +44,14 @@ export default function GlobalEffects() {
       <motion.div className="scroll-progress" style={{ scaleX }} />
       <motion.div 
         className="custom-cursor"
-        animate={{ x: mousePos.x - 10, y: mousePos.y - 10 }}
-        transition={{ type: 'spring', damping: 20, stiffness: 250, mass: 0.5 }}
+        animate={{ 
+          x: mousePos.x - 10, 
+          y: mousePos.y - 10,
+          scale: isHovering ? 2.5 : 1,
+          backgroundColor: isHovering ? 'rgba(255, 255, 255, 0.15)' : 'white',
+          border: isHovering ? '1px solid white' : 'none'
+        }}
+        transition={{ type: 'spring', damping: 25, stiffness: 300, mass: 0.5 }}
       />
       <div 
         className="cursor-glow"
@@ -48,3 +60,4 @@ export default function GlobalEffects() {
     </>
   );
 }
+
