@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
-import { User, Mail, Calendar, Target, ShieldCheck, Zap, Edit3, X, Save, Wallet } from 'lucide-react';
+import { User, Mail, Calendar, Target, ShieldCheck, Zap, Edit3, X, Save, Wallet, CheckCircle2, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ProfilePage() {
@@ -18,14 +18,15 @@ export default function ProfilePage() {
   });
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (user) {
       setFormData({
         name: user.name || '',
         email: user.email || '',
-        income: user.income || '',
-        budget: user.budget || '',
+        income: user.income || 0,
+        budget: user.budget || 0,
         currency: user.currency || '₹'
       });
     }
@@ -36,34 +37,50 @@ export default function ProfilePage() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     setSaving(true);
+    setError('');
+    
     try {
       const res = await fetch('/api/user/profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          income: parseFloat(formData.income) || 0,
+          budget: parseFloat(formData.budget) || 0
+        }),
       });
       const data = await res.json();
+      
       if (data.success) {
         updateUser(data.user);
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
           setIsModalOpen(false);
-        }, 1500);
+        }, 2000);
+      } else {
+        setError(data.error || 'Failed to update profile');
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      setError('Neural link failure. Please check your connection.');
+      console.error(err);
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 pb-20 pt-20">
+    <div className="min-h-screen bg-[#030712] text-slate-50 pb-20 pt-20">
       <Navbar />
       
       <main className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="glass-card p-10 rounded-[40px] relative overflow-hidden group">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-card p-10 rounded-[48px] relative overflow-hidden group border-white/5"
+        >
+          <div className="absolute -top-24 -right-24 h-64 w-64 bg-blue-600/10 blur-[100px] rounded-full pointer-events-none" />
+          
           <button 
             onClick={() => setIsModalOpen(true)}
             className="absolute top-10 right-10 flex items-center gap-2 rounded-2xl bg-white text-slate-950 px-6 py-3 text-[10px] font-black hover:scale-105 active:scale-95 transition-all shadow-2xl uppercase tracking-widest z-10"
@@ -71,64 +88,61 @@ export default function ProfilePage() {
             <Edit3 className="h-4 w-4" /> Edit Profile
           </button>
 
-          <div className="flex flex-col md:flex-row items-center gap-10 mb-16 relative z-10">
-            <div className="h-32 w-32 rounded-[32px] bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-5xl font-black text-white shadow-2xl shadow-blue-500/20 rotate-3 group-hover:rotate-0 transition-transform duration-700">
-              {user.name?.[0]?.toUpperCase() || 'U'}
+          <div className="flex flex-col md:flex-row items-center gap-12 mb-16 relative z-10">
+            <div className="relative">
+              <motion.div 
+                whileHover={{ rotate: 12 }}
+                className="h-40 w-40 rounded-[40px] bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 p-[2px] shadow-2xl shadow-blue-500/20"
+              >
+                <div className="h-full w-full rounded-[38px] bg-[#030712] flex items-center justify-center overflow-hidden">
+                  <img 
+                    src={`https://ui-avatars.com/api/?name=${user.name}&background=transparent&color=fff&bold=true&size=256`} 
+                    alt="Avatar" 
+                    className="w-full h-full object-cover opacity-80"
+                  />
+                </div>
+              </motion.div>
+              <div className="absolute -bottom-2 -right-2 h-12 w-12 rounded-2xl bg-blue-600 border-[6px] border-[#030712] flex items-center justify-center shadow-xl">
+                <ShieldCheck className="h-5 w-5 text-white" />
+              </div>
             </div>
+            
             <div className="text-center md:text-left">
-              <h1 className="text-5xl font-black text-white mb-2 tracking-tighter">{user.name || 'Financial Voyager'}</h1>
-              <p className="text-slate-500 font-bold text-lg">{user.email}</p>
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-6">
-                <span className="inline-flex items-center rounded-xl bg-blue-600/10 px-4 py-1.5 text-[10px] font-black text-blue-400 border border-blue-500/20 uppercase tracking-widest">
-                  Enterprise Tier
+              <h1 className="text-6xl font-black text-white mb-3 tracking-tighter leading-none">{user.name || 'Financial Voyager'}</h1>
+              <p className="text-slate-500 font-black text-lg uppercase tracking-tight">{user.email}</p>
+              <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-8">
+                <span className="inline-flex items-center rounded-xl bg-blue-600/10 px-5 py-2 text-[10px] font-black text-blue-400 border border-blue-500/10 uppercase tracking-[0.2em]">
+                  System Architect
                 </span>
-                <span className="inline-flex items-center rounded-xl bg-emerald-600/10 px-4 py-1.5 text-[10px] font-black text-emerald-400 border border-emerald-500/20 uppercase tracking-widest">
-                  <ShieldCheck className="mr-2 h-3.5 w-3.5" /> Biometrically Verified
+                <span className="inline-flex items-center rounded-xl bg-emerald-600/10 px-5 py-2 text-[10px] font-black text-emerald-400 border border-emerald-500/10 uppercase tracking-[0.2em]">
+                  <CheckCircle2 className="mr-2 h-3.5 w-3.5" /> Biometrically Verified
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
             <div className="space-y-8">
-              <h2 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-3">
-                <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-blue-500 border border-white/10">
-                  <User className="h-4 w-4" />
-                </div>
+              <h2 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] flex items-center gap-4 px-2">
                 Identity Core
               </h2>
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-4">
                 <DetailItem icon={User} label="Operational Name" value={user.name} />
                 <DetailItem icon={Mail} label="Comms Channel" value={user.email} />
               </div>
             </div>
 
             <div className="space-y-8">
-              <h2 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-3">
-                <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-amber-500 border border-white/10">
-                  <Zap className="h-4 w-4" />
-                </div>
+              <h2 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] flex items-center gap-4 px-2">
                 Fiscal Parameters
               </h2>
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-4">
                 <DetailItem icon={Target} label="Budget Threshold" value={`${user.currency || '₹'}${user.budget?.toLocaleString() || 0}`} highlight />
                 <DetailItem icon={Wallet} label="Revenue Stream" value={`${user.currency || '₹'}${user.income?.toLocaleString() || 0}`} />
               </div>
             </div>
           </div>
-
-          <div className="mt-16 pt-10 border-t border-white/5 relative z-10">
-            <h2 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-8">Security Protocol</h2>
-            <div className="flex gap-4">
-               <div className="rounded-2xl bg-white/5 px-8 py-4 text-[10px] font-black text-slate-500 border border-white/10 uppercase tracking-widest cursor-not-allowed">
-                 Quantum Encryption: Active
-               </div>
-               <div className="rounded-2xl bg-white/5 px-8 py-4 text-[10px] font-black text-slate-500 border border-white/10 uppercase tracking-widest cursor-not-allowed">
-                 MFA Override: Disabled
-               </div>
-            </div>
-          </div>
-        </div>
+        </motion.div>
       </main>
 
       {/* Edit Modal */}
@@ -140,74 +154,96 @@ export default function ProfilePage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl"
+              className="absolute inset-0 bg-slate-950/90 backdrop-blur-2xl"
             />
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-xl rounded-[40px] bg-slate-900 p-10 shadow-2xl border border-white/10 overflow-hidden"
+              exit={{ opacity: 0, scale: 0.9, y: 30 }}
+              className="relative w-full max-w-2xl rounded-[48px] bg-slate-900 p-12 shadow-2xl border border-white/10 overflow-hidden"
             >
-              <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
-                  <Edit3 className="h-40 w-40" />
+              <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none text-blue-500">
+                  <Edit3 className="h-64 w-64" />
               </div>
 
               <div className="flex items-center justify-between mb-12 relative z-10">
-                <div className="flex items-center gap-5">
-                  <div className="bg-blue-600 h-14 w-14 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
-                    <Edit3 className="h-7 w-7" />
+                <div className="flex items-center gap-6">
+                  <div className="bg-blue-600 h-16 w-16 rounded-3xl flex items-center justify-center text-white shadow-2xl shadow-blue-500/40">
+                    <Edit3 className="h-8 w-8" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-white leading-none tracking-tight">Sync Parameters</h2>
-                    <p className="text-[10px] uppercase font-black tracking-[0.2em] text-slate-500 mt-2">Adjust your fiscal environment</p>
+                    <h2 className="text-4xl font-black text-white leading-none tracking-tighter">Sync Parameters</h2>
+                    <p className="text-[10px] uppercase font-black tracking-[0.3em] text-slate-500 mt-3">Adjust your fiscal environment</p>
                   </div>
                 </div>
                 <button 
                   onClick={() => setIsModalOpen(false)} 
-                  className="text-slate-500 hover:text-white transition-colors p-3 bg-white/5 rounded-2xl border border-white/10"
+                  className="text-slate-500 hover:text-white transition-colors p-4 bg-white/5 rounded-2xl border border-white/10"
                 >
                   <X className="h-6 w-6" />
                 </button>
               </div>
 
               <form onSubmit={handleUpdate} className="space-y-8 relative z-10">
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-2">Display Identification</label>
-                  <input
-                    type="text"
-                    required
-                    className="w-full rounded-2xl bg-white/5 border border-white/10 text-lg font-black text-white focus:ring-4 focus:ring-blue-500/20 py-4 px-6 outline-none transition-all"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  />
-                </div>
+                {error && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-3 p-5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400"
+                  >
+                    <AlertCircle className="h-5 w-5" />
+                    <p className="text-[10px] font-black uppercase tracking-widest">{error}</p>
+                  </motion.div>
+                )}
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-2">Communication Node</label>
-                  <input
-                    type="email"
-                    required
-                    className="w-full rounded-2xl bg-white/5 border border-white/10 text-lg font-black text-white focus:ring-4 focus:ring-blue-500/20 py-4 px-6 outline-none transition-all"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-2">Fiscal Limit</label>
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-2">Identity</label>
+                    <input
+                      type="text"
+                      required
+                      className="w-full rounded-2xl bg-white/5 border border-white/10 text-lg font-black text-white focus:ring-4 focus:ring-blue-500/20 py-4 px-6 outline-none transition-all"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-2">Channel</label>
+                    <input
+                      type="email"
+                      required
+                      className="w-full rounded-2xl bg-white/5 border border-white/10 text-lg font-black text-white focus:ring-4 focus:ring-blue-500/20 py-4 px-6 outline-none transition-all"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-2">Revenue</label>
                     <input
                       type="number"
                       className="w-full rounded-2xl bg-white/5 border border-white/10 text-lg font-black text-white focus:ring-4 focus:ring-blue-500/20 py-4 px-6 outline-none transition-all"
-                      placeholder="0"
+                      placeholder="Income"
+                      value={formData.income}
+                      onChange={(e) => setFormData({ ...formData, income: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-2">Threshold</label>
+                    <input
+                      type="number"
+                      className="w-full rounded-2xl bg-white/5 border border-white/10 text-lg font-black text-white focus:ring-4 focus:ring-blue-500/20 py-4 px-6 outline-none transition-all"
+                      placeholder="Budget"
                       value={formData.budget}
                       onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-2">Symbol Set</label>
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-2">Symbol</label>
                     <select
-                      className="w-full rounded-2xl bg-white/5 border border-white/10 text-lg font-black text-white focus:ring-4 focus:ring-blue-500/20 py-4 px-6 outline-none transition-all appearance-none"
+                      className="w-full h-[62px] rounded-2xl bg-white/5 border border-white/10 text-lg font-black text-white focus:ring-4 focus:ring-blue-500/20 px-6 outline-none transition-all appearance-none"
                       value={formData.currency}
                       onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
                     >
@@ -222,11 +258,11 @@ export default function ProfilePage() {
                 <button
                   type="submit"
                   disabled={saving || success}
-                  className={`w-full rounded-2xl py-5 font-black tracking-[0.2em] text-white transition-all shadow-2xl flex items-center justify-center gap-3 uppercase text-xs ${
-                    success ? 'bg-emerald-600 shadow-emerald-500/20' : 'bg-blue-600 hover:bg-blue-500 shadow-blue-600/20'
+                  className={`w-full rounded-2xl py-6 font-black tracking-[0.3em] text-white transition-all shadow-2xl flex items-center justify-center gap-3 uppercase text-xs mt-8 ${
+                    success ? 'bg-emerald-600 shadow-emerald-500/40' : 'bg-blue-600 hover:bg-blue-500 shadow-blue-500/40'
                   }`}
                 >
-                  {saving ? 'Processing Sync...' : success ? <><Check className="h-5 w-5" /> Protocol Updated</> : <><Save className="h-5 w-5" /> Execute Update</>}
+                  {saving ? 'Processing Sync...' : success ? <><CheckCircle2 className="h-5 w-5" /> Protocol Updated</> : <><Save className="h-5 w-5" /> Execute Update</>}
                 </button>
               </form>
             </motion.div>
@@ -239,14 +275,18 @@ export default function ProfilePage() {
 
 function DetailItem({ icon: Icon, label, value, highlight }) {
   return (
-    <div className="flex items-center gap-6 rounded-[24px] bg-white/[0.03] p-6 border border-white/5 group hover:bg-white/[0.06] transition-all">
-      <div className="h-12 w-12 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:text-blue-400 transition-colors border border-white/10">
+    <div className="flex items-center gap-6 rounded-[32px] bg-white/[0.03] p-7 border border-white/5 group hover:bg-white/[0.06] transition-all">
+      <div className="h-14 w-14 rounded-2xl bg-slate-900 flex items-center justify-center text-slate-600 group-hover:text-blue-400 transition-colors border border-white/10">
         <Icon className="h-6 w-6" />
       </div>
       <div>
-        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">{label}</p>
-        <p className={`text-xl font-black ${highlight ? 'text-blue-400' : 'text-white'} tracking-tight`}>{value || 'Unset'}</p>
+        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1.5">{label}</p>
+        <p className={`text-2xl font-black ${highlight ? 'text-blue-400' : 'text-white'} tracking-tighter`}>{value || 'Unset'}</p>
       </div>
+    </div>
+  );
+}
+
     </div>
   );
 }

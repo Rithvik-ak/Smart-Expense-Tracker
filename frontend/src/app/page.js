@@ -37,7 +37,7 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-8">
             <Link href="#features" className="text-[10px] font-black text-slate-400 hover:text-white transition-colors uppercase tracking-[0.2em] hidden md:block">Modules</Link>
-            <Link href="#preview" className="text-[10px] font-black text-slate-400 hover:text-white transition-colors uppercase tracking-[0.2em] hidden md:block">Preview</Link>
+            <Link href="#protocol" className="text-[10px] font-black text-slate-400 hover:text-white transition-colors uppercase tracking-[0.2em] hidden md:block">Protocol</Link>
             {user ? (
               <Link href="/dashboard" className="glass px-6 py-2.5 rounded-xl text-[10px] font-black text-white hover:bg-white/10 transition-all uppercase tracking-[0.2em]">Command Center</Link>
             ) : (
@@ -81,10 +81,9 @@ export default function LandingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 1 }}
-            className="mx-auto max-w-2xl text-lg text-slate-400 font-medium leading-relaxed mb-12"
+            className="mx-auto max-w-3xl text-lg text-slate-400 font-medium leading-relaxed mb-12"
           >
-            Astra helps students manage money, time, and goals in one system. 
-            The central command center for your academic and financial future.
+            Track every rupee, master your time, and hit your semester goals—all in one intelligent system. Stop guessing where your money goes and start studying with intent.
           </motion.p>
           
           <motion.div 
@@ -94,11 +93,11 @@ export default function LandingPage() {
             className="flex flex-col sm:flex-row items-center justify-center gap-6"
           >
             <Link href={user ? "/dashboard" : "/signup"} className="group relative rounded-2xl bg-white px-10 py-5 text-[10px] font-black text-slate-950 shadow-2xl shadow-white/10 transition-all hover:scale-105 active:scale-95 uppercase tracking-[0.3em]">
-              Get Started
+              Initialize Astra — It's Free
               <ArrowRight className="inline-block ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <Link href="#preview" className="glass rounded-2xl px-10 py-5 text-[10px] font-black text-white transition-all hover:bg-white/10 uppercase tracking-[0.3em]">
-              Explore System
+              View System Demo
             </Link>
           </motion.div>
         </div>
@@ -116,27 +115,27 @@ export default function LandingPage() {
             <FeatureCard 
               icon={BarChart3} 
               title="Finance OS" 
-              desc="Scientific spending analysis with 2x2 matrix categorization. Stop guessing, start growing."
+              desc="Scientific spending analysis with 2x2 matrix categorization. See exactly why you spent ₹1500 on Swiggy last week."
               gradient="from-blue-600 to-indigo-600"
             />
             <FeatureCard 
               icon={Clock} 
               title="Time Control" 
-              desc="Built-in Pomodoro and task management designed for deep focus sessions."
+              desc="Master your schedule with built-in Pomodoro sprints. Start a 25-minute focus session for your DBMS assignment."
               gradient="from-purple-600 to-pink-600"
             />
             <FeatureCard 
               icon={Brain} 
-              title="AI Insights" 
-              desc="Neural suggestions that adapt to your student lifestyle. Predictive saving at its best."
+              title="Neural Intelligence" 
+              desc="Get proactive AI alerts when you are 20% over budget or when it is the optimal time for a study sprint."
               gradient="from-emerald-600 to-teal-600"
             />
           </div>
         </div>
       </section>
 
-      {/* Dashboard Preview Section */}
-      <section id="preview" className="py-24 lg:py-48 relative overflow-hidden bg-white/[0.01]">
+      {/* The Astra Protocol Section */}
+      <section id="protocol" className="py-24 lg:py-48 relative overflow-hidden bg-white/[0.01]">
          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.05)_0%,transparent_70%)] pointer-events-none" />
          
          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -146,51 +145,56 @@ export default function LandingPage() {
                  whileInView={{ opacity: 1 }}
                  className="text-[10px] font-black uppercase tracking-[0.5em] text-blue-500 mb-4 block"
                >
-                 Command Center
+                 Initialization
                </motion.span>
-               <h2 className="text-5xl font-black sm:text-7xl tracking-tight mb-8">Master Your <span className="text-gradient">Ecosystem.</span></h2>
+               <h2 className="text-5xl font-black sm:text-7xl tracking-tight mb-8">The Astra <span className="text-gradient">Protocol.</span></h2>
+               <p className="mx-auto max-w-2xl text-slate-400 font-medium text-lg leading-relaxed">
+                 Deploying your student OS is simple. Here is how you master the system from day one.
+               </p>
             </div>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 100, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="relative mx-auto max-w-6xl"
-            >
-              <div className="glass-card rounded-[40px] p-2 lg:p-4 shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
-                <img 
-                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2070" 
-                  alt="Dashboard Preview" 
-                  className="rounded-[32px] w-full border border-white/5 grayscale-[0.2] opacity-80"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-slate-950/40 backdrop-blur-[2px]">
-                   <Link href="/signup" className="glass p-6 rounded-full group">
-                     <div className="h-16 w-16 rounded-full bg-white flex items-center justify-center text-slate-950 transition-transform group-hover:scale-110">
-                        <ArrowRight className="h-8 w-8" />
-                     </div>
-                   </Link>
-                </div>
-              </div>
-              
-              {/* Floating Labels */}
-              <motion.div 
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-10 -right-10 glass-card p-4 rounded-2xl hidden lg:block"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                    <TrendingUp className="h-4 w-4 text-emerald-400" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Growth Rate</p>
-                    <p className="text-lg font-black text-white">+12.4%</p>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+               <div className="absolute top-1/2 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/5 to-transparent hidden md:block" />
+               <ProtocolStep 
+                 step="01" 
+                 title="Log & Budget" 
+                 desc="Quickly add your daily expenses and set simple limits for food, travel, and entertainment." 
+               />
+               <ProtocolStep 
+                 step="02" 
+                 title="Focus & Execute" 
+                 desc="Break down your syllabus into tasks and use the built-in Pomodoro timer to stay in the zone." 
+               />
+               <ProtocolStep 
+                 step="03" 
+                 title="Analyze & Optimize" 
+                 desc="Check your weekly Intelligence Report for AI-driven suggestions on how to save and study smarter." 
+               />
+            </div>
          </div>
+      </section>
+
+      {/* Social Proof Section */}
+      <section className="py-24 lg:py-48 relative border-t border-white/5">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+           <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-500 mb-16">
+             Built by students in Hyderabad for students everywhere
+           </h3>
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+             <Testimonial 
+               quote="Astra showed me I was spending ₹2k on apps I don't use. I've saved so much this month!" 
+               author="Rahul, VNRVJIET" 
+             />
+             <Testimonial 
+               quote="The Pomodoro timer is a game changer. I finished my entire DSA backlog in just three focus sprints." 
+               author="Priya, CBIT" 
+             />
+             <Testimonial 
+               quote="It feels like a high-end OS for my life. Managing internship tasks and expenses is finally easy." 
+               author="Ishaan, IIT Hyderabad" 
+             />
+           </div>
+        </div>
       </section>
 
       {/* CTA Section */}
@@ -214,25 +218,61 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="py-24 border-t border-white/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-12">
-            <div className="flex flex-col items-center md:items-start">
-               <div className="flex items-center gap-3 mb-4">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
+            <div className="flex flex-col items-start">
+               <div className="flex items-center gap-3 mb-6">
                   <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center">
                     <Zap className="h-5 w-5 text-white fill-white" />
                   </div>
                   <span className="text-xl font-black uppercase italic tracking-tighter">Astra</span>
                </div>
-               <p className="text-slate-500 text-sm font-medium">The Operating System for Students.</p>
+               <p className="text-slate-500 text-sm font-medium max-w-xs leading-relaxed">
+                 The Operating System for Students. Built to optimize your financial and academic life.
+               </p>
             </div>
-            <div className="flex gap-12">
-               <FooterLink href="#" label="System" />
-               <FooterLink href="#" label="Security" />
-               <FooterLink href="#" label="Network" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-12">
+               <FooterLink label="System" desc="Product overview and core features." />
+               <FooterLink label="Security" desc="Data encryption and privacy protocols." />
+               <FooterLink label="Network" desc="Global student community and updates." />
+            </div>
+          </div>
+          
+          <div className="pt-16 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="max-w-md text-center md:text-left">
+              <h4 className="text-[10px] font-black text-slate-200 uppercase tracking-widest mb-2">Security Declaration</h4>
+              <p className="text-[10px] text-slate-500 leading-relaxed font-bold uppercase tracking-widest">
+                Your data belongs to you. We don't sell your information or track your personal identity. You control what you log, and we ensure it stays encrypted and private.
+              </p>
             </div>
             <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.5em]">© 2026 Astra OS • v1.0.4</p>
           </div>
         </div>
       </footer>
+    </div>
+  );
+}
+
+function ProtocolStep({ step, title, desc }) {
+  return (
+    <div className="relative group text-center md:text-left">
+      <div className="mb-6 text-7xl font-black text-white/5 group-hover:text-blue-500/10 transition-colors leading-none select-none">
+        {step}
+      </div>
+      <h3 className="text-2xl font-black text-white mb-3 tracking-tight">{title}</h3>
+      <p className="text-slate-400 font-medium text-sm leading-relaxed">{desc}</p>
+    </div>
+  );
+}
+
+function Testimonial({ quote, author }) {
+  return (
+    <div className="glass-card p-8 rounded-[32px] text-left hover:bg-white/[0.05] transition-all">
+      <p className="text-lg font-medium text-slate-200 leading-relaxed mb-6 italic">
+        "{quote}"
+      </p>
+      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
+        {author}
+      </p>
     </div>
   );
 }
@@ -256,10 +296,16 @@ function FeatureCard({ icon: Icon, title, desc, gradient }) {
   );
 }
 
-function FooterLink({ href, label }) {
+function FooterLink({ label, desc }) {
   return (
-    <Link href={href} className="text-[10px] font-black text-slate-500 hover:text-white transition-colors uppercase tracking-[0.3em]">
-      {label}
-    </Link>
+    <div className="space-y-3 group cursor-help">
+       <span className="text-[10px] font-black text-slate-500 group-hover:text-white transition-colors uppercase tracking-[0.3em]">
+         {label}
+       </span>
+       <p className="text-[9px] font-bold text-slate-600 group-hover:text-slate-400 transition-colors uppercase tracking-widest leading-relaxed max-w-[120px]">
+         {desc}
+       </p>
+    </div>
   );
 }
+

@@ -1,7 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Trophy, Star, Zap, Target, TrendingUp, ShieldCheck, Award, Sparkles } from 'lucide-react';
+import { Trophy, Star, Zap, Target, TrendingUp, ShieldCheck, Award, Sparkles, Settings } from 'lucide-react';
+import Link from 'next/link';
 
 export default function StudentProfilePanel({ user }) {
   const stats = [
@@ -20,31 +21,41 @@ export default function StudentProfilePanel({ user }) {
     <div className="glass-card p-8 rounded-[32px] flex flex-col h-full relative overflow-hidden group">
       <div className="absolute -top-24 -left-24 h-48 w-48 bg-blue-600/10 blur-[80px] rounded-full pointer-events-none" />
       
-      <div className="flex items-center gap-6 mb-10 relative z-10">
-        <div className="relative">
-          <motion.div 
-            whileHover={{ rotate: 15, scale: 1.05 }}
-            className="h-24 w-24 rounded-[32px] bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 p-[2px] shadow-2xl shadow-blue-500/20"
-          >
-            <div className="h-full w-full rounded-[30px] bg-slate-950 flex items-center justify-center overflow-hidden">
-              <img 
-                src={`https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=transparent&color=fff&bold=true&size=128`} 
-                alt="Avatar" 
-                className="w-full h-full object-cover opacity-80"
-              />
+      <div className="flex items-center justify-between mb-10 relative z-10">
+        <div className="flex items-center gap-6">
+          <div className="relative">
+            <motion.div 
+              whileHover={{ rotate: 15, scale: 1.05 }}
+              className="h-24 w-24 rounded-[32px] bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 p-[2px] shadow-2xl shadow-blue-500/20"
+            >
+              <div className="h-full w-full rounded-[30px] bg-slate-950 flex items-center justify-center overflow-hidden">
+                <img 
+                  src={`https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=transparent&color=fff&bold=true&size=128`} 
+                  alt="Avatar" 
+                  className="w-full h-full object-cover opacity-80"
+                />
+              </div>
+            </motion.div>
+            <div className="absolute -bottom-2 -right-2 h-10 w-10 rounded-2xl bg-blue-600 border-[6px] border-[#030712] flex items-center justify-center shadow-xl">
+              <Trophy className="h-4 w-4 text-white" />
             </div>
-          </motion.div>
-          <div className="absolute -bottom-2 -right-2 h-10 w-10 rounded-2xl bg-blue-600 border-[6px] border-[#030712] flex items-center justify-center shadow-xl">
-            <Trophy className="h-4 w-4 text-white" />
+          </div>
+          <div>
+            <h2 className="text-3xl font-black text-white tracking-tighter leading-none">{user?.name || 'Astra User'}</h2>
+            <div className="flex items-center gap-2 mt-3">
+               <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Status: Optimized</p>
+            </div>
           </div>
         </div>
-        <div>
-          <h2 className="text-3xl font-black text-white tracking-tighter leading-none">{user?.name || 'Astra User'}</h2>
-          <div className="flex items-center gap-2 mt-3">
-             <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Status: Optimized</p>
-          </div>
-        </div>
+        
+        <Link 
+          href="/profile" 
+          className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-500 hover:text-white hover:bg-white/10 transition-all group/settings"
+          title="Configure System"
+        >
+          <Settings className="h-5 w-5 group-hover/settings:rotate-90 transition-transform" />
+        </Link>
       </div>
 
       {/* Experience Bar */}
@@ -110,4 +121,5 @@ export default function StudentProfilePanel({ user }) {
     </div>
   );
 }
+
 
